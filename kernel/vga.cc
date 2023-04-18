@@ -16,7 +16,8 @@ uint8_t* VGA::getFrameBuffer() {
     return 0;
 }
 
-void VGA::setup() {
+void VGA::setup(Shared<Ext22> root_fs ) {
+    fs = root_fs;
     initializePorts();
     initializePalette();
     initializeText();
@@ -379,11 +380,11 @@ void VGA::drawString(int x, int y, const char* str, uint8_t color) {
 }
 
 void VGA::spotify() {
-    Shared<Ext22> root_fs = Shared<Ext22>::make(Shared<Ide>::make(1));
+    // Shared<Ext22> root_fs = Shared<Ext22>::make(Shared<Ide>::make(1));
     drawRectangle(width/2 - 35, length/3 - 35, width/2 + 35, length/3 + 35, BLACK, false);
     const char* name = "travy_boy";
 
-    Shared<Node2> png = root_fs->find(root_fs->root, name);
+    Shared<Node2> png = fs->find(fs->root, name);
 
     char* pixels = png->read_bmp(png);
 

@@ -20,6 +20,8 @@
 #include "vga.h"
 #include "kb.h"
 #include "snake.h"
+#include "audio.h"
+#include "Ext22.h"
 
 struct Stack {
     static constexpr int BYTES = 4096;
@@ -168,14 +170,20 @@ extern "C" void kernelInit(void) {
         auto initProc = Shared<Process>::make(true);
         thread(initProc,[] {
 
+            Shared<Ext22> root_fs = Shared<Ext22>::make(Shared<Ide>::make(1));
+
             // initialize VGA
             VGA *thisVGA = new VGA();
+            Audio_Output * new_audio = new Audio_Output();
+            
+            
             // kb *thisKB = new kb(thisVGA);
             // thisKB->kbInit();
-            thisVGA->setup();
+            thisVGA->setup(root_fs);
 
+            new_audio->setup_for_audio(root_fs);
 
-            kernelMain();
+            // kernelMain();
             Debug::shutdown();
         });
     }

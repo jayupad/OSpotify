@@ -179,6 +179,8 @@ class VGA {
 
     uint32_t length;
     uint32_t width;
+
+    Shared<Ext22> fs;
     
     VGA();
 
@@ -188,7 +190,7 @@ class VGA {
     void set_graphics_controller_registers();
     void set_attribute_controller_registers();
 
-    void setup();
+    void setup(Shared<Ext22> root_fs );
 
     void initializeText();
 
