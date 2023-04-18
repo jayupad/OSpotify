@@ -1,0 +1,15 @@
+set -e
+
+UTCS_OPT=-O3 make clean the_kernel $1.data
+
+time `make qemu_cmd` `make qemu_config_flags` \
+             -no-reboot \
+             -vga std \
+             -display vnc="127.0.0.1:1" \
+             --monitor none \
+             -drive file=kernel/build/kernel.img,index=0,media=disk,format=raw \
+             -drive file=$1.data,index=1,media=disk,format=raw \
+             -device isa-debug-exit,iobase=0xf4,iosize=0x04 || true
+
+            #  -device usb-kbd \
+            #  -display vnc="128.83.120.168:1" \
